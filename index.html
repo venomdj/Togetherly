@@ -656,7 +656,7 @@
       Distance is just<br>a number, <em>love</em><br>isn't.
     </h1>
     <p class="hero-desc fade-up delay-2">
-      MADE BY ROSHNI AND DEV 💗.
+      Made By Roshni And Devansh 💗
     </p>
     <div class="hero-actions fade-up delay-3">
       <a href="#waitlist" class="btn-primary">Join the Waitlist</a>
@@ -702,7 +702,7 @@
 <!-- QUOTE -->
 <section class="quote-section">
   <p class="big-quote">"We built this for <em>us</em> — and realized every long-distance couple deserves something like this."</p>
-  <p class="quote-sub">— Roshni and Dev<3</p>
+  <p class="quote-sub">— The Togetherly Team</p>
 </section>
 
 <!-- FEATURES -->
@@ -801,24 +801,62 @@
 <!-- FOOTER -->
 <footer>
   <div class="logo">Together<span style="color:var(--rose)">ly</span></div>
-  <p>Made by a couple, for couples © 2025</p>
+  <p>Made with love, for love © 2025</p>
   <p style="font-size:0.72rem; color: var(--muted);">Built for every heart that's far away</p>
 </footer>
 
-<script>
-  function joinWaitlist() {
-    const input = document.getElementById('emailInput');
-    const msg = document.getElementById('successMsg');
-    if (input.value && input.value.includes('@')) {
-      input.style.display = 'none';
-      msg.style.display = 'block';
-    } else {
+<!-- FIREBASE -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getFirestore, collection, addDoc, serverTimestamp }
+    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  const app = initializeApp({
+    apiKey:            "AIzaSyCVS5CpNPA5Ze9XDVFCw-ngeZNo1KzaZYY",
+    authDomain:        "oshudev-333.firebaseapp.com",
+    projectId:         "oshudev-333",
+    storageBucket:     "oshudev-333.firebasestorage.app",
+    messagingSenderId: "595314827472",
+    appId:             "1:595314827472:web:84b1e034f4b3a6e5523ed5"
+  });
+  const db = getFirestore(app);
+
+  window.joinWaitlist = async function() {
+    const input  = document.getElementById('emailInput');
+    const btn    = document.querySelector('.waitlist-form button');
+    const msg    = document.getElementById('successMsg');
+    const email  = input.value.trim();
+
+    if (!email || !email.includes('@')) {
       input.style.borderColor = '#C4796A';
       input.placeholder = 'Please enter a valid email';
+      return;
     }
-  }
 
-  // Intersection Observer for scroll animations
+    // loading state
+    btn.textContent = 'Saving…';
+    btn.disabled = true;
+
+    try {
+      await addDoc(collection(db, 'waitlist'), {
+        email,
+        joinedAt: serverTimestamp()
+      });
+      // success
+      input.style.display = 'none';
+      btn.style.display   = 'none';
+      msg.style.display   = 'block';
+    } catch(e) {
+      console.error(e);
+      btn.textContent = 'Join Waitlist';
+      btn.disabled = false;
+      msg.textContent  = '⚠ Something went wrong. Please try again.';
+      msg.style.display = 'block';
+      msg.style.color   = '#e88';
+    }
+  };
+
+  // Scroll animations
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
