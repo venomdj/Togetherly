@@ -887,7 +887,7 @@ body.dark footer { border-color: rgba(255,255,255,0.08); }
     el.style.transform = 'translateY(20px)';
     observer.observe(el);
   });
- function toggleDark() {
+ window.toggleDark = function() {
   document.body.classList.toggle('dark');
   const btn = document.getElementById('themeBtn');
   btn.textContent = document.body.classList.contains('dark') ? '☀️ Light' : '🌙 Dark';
